@@ -1,0 +1,53 @@
+# Client Authentication and Authorization Configuration
+#
+# This configuration file defines:
+# - CA certificates used to authenticate clients
+# - Client identifiers and their associated resource access policies
+#
+# Future Enhancements:
+# - Support for client groups
+# - Support for client roles
+# - Support for CA certs that map to specific client IDs or groups
+
+# CA certificates used to authenticate client connections
+[cacerts]
+cert_chain = '''-----BEGIN CERTIFICATE-----
+MIIBhzCCAS2gAwIBAgIUK5mepuXIDRiu3+wf/xAJWnNC8FQwCgYIKoZIzj0EAwIw
+IDELMAkGA1UEBhMCQlIxETAPBgNVBAoMCEFyZ29uYXRoMCAXDTc1MDEwMTAwMDAw
+MFoYDzQwOTYwMTAxMDAwMDAwWjAgMQswCQYDVQQGEwJCUjERMA8GA1UECgwIQXJn
+b25hdGgwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAASXj9chp02AlLDE+a45o82K
+YpyzVsBb97kxIEnmYMYWJv3mYjGY9Xp0KYfwE7L13EF9aOpY/TW1FSslBGIxryK4
+o0MwQTAPBgNVHQ8BAf8EBQMDB4YAMB0GA1UdDgQWBBT0ujDuSDBEmSH2LLppad+o
+TY9iczAPBgNVHRMBAf8EBTADAQH/MAoGCCqGSM49BAMCA0gAMEUCIDiVwniQOgsl
+rj+jsRPobo/0XVuxnpomP9ncYjfd5zcCAiEA3W28JqaOwXLFnEjo3zcSBjEiUqR5
+shuAeMGMX448fSA=
+-----END CERTIFICATE-----
+-----BEGIN CERTIFICATE-----
+MIIBhTCCASugAwIBAgIUZyv7Dxrx06maXW7nKaklKc1lzEcwCgYIKoZIzj0EAwIw
+HzELMAkGA1UEBhMCQlIxEDAOBgNVBAoMB051bWVub3IwIBcNNzUwMTAxMDAwMDAw
+WhgPNDA5NjAxMDEwMDAwMDBaMB8xCzAJBgNVBAYTAkJSMRAwDgYDVQQKDAdOdW1l
+bm9yMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEvGY+Cmi+B1DrzpH8SUelm20R
+kxBCOdi27eRQ1WrPqtmGDgRrGgz8FNDMoVU3RBr7zzbje2jvyy8+zvjGBU+HSaND
+MEEwDwYDVR0PAQH/BAUDAweGADAdBgNVHQ4EFgQUpPFTeWCmaxmPeh5ST8kfs4O0
+Bf8wDwYDVR0TAQH/BAUwAwEB/zAKBggqhkjOPQQDAgNIADBFAiEApfeOObUiaF4T
+koovvdv1qjt6pnV8nCqn7IvZTTgLqusCIB4BlH3xsPou8YcuDmyK1o4iDXYAFTWL
+PhbD6amqIElE
+-----END CERTIFICATE-----'''
+
+# Client definitions and their access policies
+# Each client is identified by a unique identifier (currently using SAN URI)
+# and is granted access to specific resources.
+#
+# Client identification methods (current and potential):
+# - SAN URI (currently implemented)
+# - Other SAN types
+# - Certificate serial number
+# - CA certificate mapping to client ID
+
+[[clients]]
+identifier = { type = "san_uri", value = "uri:urn:test:argo-cli0" }
+resources = ["resource1", "resource2", "resource4", "order_service"]
+
+[[clients]]
+identifier = { type = "san_uri", value = "uri:urn:test:argo-cli1" }
+resources = ["resource2", "resource3", "resource4", "order_service"]

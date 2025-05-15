@@ -1,0 +1,43 @@
+# Resource Definitions and Authorization Policies
+#
+# This configuration defines resources and their authorization requirements.
+# Resources can be defined as service chains, where each node in the chain
+# represents a component that needs to verify and attest the token.
+#
+# Service chains can represent:
+# - Microservice architectures
+# - Edge function pipelines
+# - Linux program pipelines
+# - Any other chain of components requiring authorization
+#
+# The goal is to provide templates and SDKs that handle authorization
+# logic automatically, eliminating the need for custom authorization
+# implementations by users.
+
+# Future Enhancements:
+# - Add templating for service chain nodes
+#   Example template structure:
+#   [resource_templates.edge_only]
+#   type = "service_chain"
+#   nodes = [
+#     { component = "edge_function", public_key = "..." }
+#   ]
+#
+#   [resources.resource4]
+#   template = "edge_only"
+
+# Resource Definitions
+[resources.resource4]
+type = "service_chain"
+nodes = [
+  # Nodes are processed in strict order from first to last
+  { component = "edge_function", public_key = "ed25519/9c3e8f10e0e8eeef1db086915a15a590e7d838683841719b5e70ddab2115b826" },
+]
+
+[resources.order_service]
+type = "service_chain"
+nodes = [
+  { component = "auth_service", public_key = "ed25519/e57618058b1d2e0381a9813c1405830d5ed7d603717384ef555d9cc0cfa65d83" },
+  { component = "payment_service", public_key = "ed25519/78ef4255c4c9ab5c7186d6db4760758b06616c042a2538323ae3b058094034b6" },
+  { component = "order_service", public_key = "ed25519/1aebc5a6eefc569051926a6aaf55568e53edb475f2f2eb904522609391d88113" },
+]
