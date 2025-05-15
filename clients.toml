@@ -9,6 +9,8 @@
 # - Support for client roles
 # - Support for CA certs that map to specific client IDs or groups
 
+version = "0.1.0"
+
 # CA certificates used to authenticate client connections
 [cacerts]
 cert_chain = '''-----BEGIN CERTIFICATE-----
