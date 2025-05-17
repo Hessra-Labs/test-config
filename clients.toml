@@ -1,3 +1,6 @@
+# Version of the config file format
+version = "0.2.0"
+
 # Client Authentication and Authorization Configuration
 #
 # This configuration file defines:
@@ -8,8 +11,6 @@
 # - Support for client groups
 # - Support for client roles
 # - Support for CA certs that map to specific client IDs or groups
-
-version = "0.1.0"
 
 # CA certificates used to authenticate client connections
 [cacerts]
@@ -48,8 +49,8 @@ PhbD6amqIElE
 
 [[clients]]
 identifier = { type = "san_uri", value = "uri:urn:test:argo-cli0" }
-resources = ["resource1", "resource2", "resource4", "order_service"]
+resources = [ { name = "resource1", operations = ["read", "write"] }, { name = "resource2", operations = ["read", "write"] }, { name = "resource4", operations = ["read", "write"] }, { name = "order_service", operations = ["read", "write"] } ]
 
 [[clients]]
 identifier = { type = "san_uri", value = "uri:urn:test:argo-cli1" }
-resources = ["resource2", "resource3", "resource4", "order_service"]
+resources = [ { name = "resource2", operations = ["read", "write"] }, { name = "resource3", operations = ["read", "write"] }, { name = "resource4", operations = ["read", "write"] }, { name = "order_service", operations = ["read", "write"] } ]

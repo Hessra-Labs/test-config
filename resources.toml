@@ -1,3 +1,6 @@
+# Version of the config file format
+version = "0.1.0"
+
 # Resource Definitions and Authorization Policies
 #
 # This configuration defines resources and their authorization requirements.
@@ -25,8 +28,6 @@
 #
 #   [resources.resource4]
 #   template = "edge_only"
-
-version = "0.1.0"
 
 # Resource Definitions
 [resources.resource4]
