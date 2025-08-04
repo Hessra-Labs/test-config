@@ -35,6 +35,16 @@ MEEwDwYDVR0PAQH/BAUDAweGADAdBgNVHQ4EFgQUpPFTeWCmaxmPeh5ST8kfs4O0
 Bf8wDwYDVR0TAQH/BAUwAwEB/zAKBggqhkjOPQQDAgNIADBFAiEApfeOObUiaF4T
 koovvdv1qjt6pnV8nCqn7IvZTTgLqusCIB4BlH3xsPou8YcuDmyK1o4iDXYAFTWL
 PhbD6amqIElE
+-----END CERTIFICATE-----
+-----BEGIN CERTIFICATE-----
+MIIBUTCCAQOgAwIBAgIUUXWAIKd/etSItfHJ2e0CeE4/NokwBQYDK2VwMCUxCzAJ
+BgNVBAYTAkZSMRYwFAYDVQQKDA1CYWxkdXIncyBHYXRlMCAXDTc1MDEwMTAwMDAw
+MFoYDzQwOTYwMTAxMDAwMDAwWjAlMQswCQYDVQQGEwJGUjEWMBQGA1UECgwNQmFs
+ZHVyJ3MgR2F0ZTAqMAUGAytlcAMhAAq224d2gkTtIlivlvXrnzeoHPdP+zVdEHn0
+pcg5Bkx0o0MwQTAPBgNVHQ8BAf8EBQMDB4YAMB0GA1UdDgQWBBQCmjFsxWmDXvBG
+gjM2b7lfszvRuDAPBgNVHRMBAf8EBTADAQH/MAUGAytlcANBAPGSWPzPheXBiL1r
+fL4ZeIO3M5bHZXAUgcLABIKfImA88uZpYgZRfAaJmvN4WxyTzHFfz+I84pOebvzg
+w+PhXA8=
 -----END CERTIFICATE-----'''
 
 # Client definitions and their access policies
@@ -49,8 +59,12 @@ PhbD6amqIElE
 
 [[clients]]
 identifier = { type = "san_uri", value = "uri:urn:test:argo-cli0" }
-resources = [ { name = "resource1", operations = ["read", "write"] }, { name = "resource2", operations = ["read", "write"] }, { name = "resource4", operations = ["read", "write"] }, { name = "order_service", operations = ["read", "write"] } ]
+resources = [ { name = "resource1", operations = ["read", "write"] }, { name = "resource2", operations = ["read", "write"] }, { name = "resource4", operations = ["read", "write"] }, { name = "order_service", operations = ["read", "write"] }, { name = "update_telemetry", operations = ["update"] } ]
 
 [[clients]]
 identifier = { type = "san_uri", value = "uri:urn:test:argo-cli1" }
-resources = [ { name = "resource2", operations = ["read", "write"] }, { name = "resource3", operations = ["read", "write"] }, { name = "resource4", operations = ["read", "write"] }, { name = "order_service", operations = ["read", "write"] } ]
+resources = [ { name = "resource2", operations = ["read", "write"] }, { name = "resource3", operations = ["read", "write"] }, { name = "resource4", operations = ["read", "write"] }, { name = "order_service", operations = ["read", "write"] }, { name = "update_telemetry", operations = ["update"] } ]
+
+[[clients]]
+identifier = { type = "san_uri", value = "uri:urn:test:mage0" }
+resources = [ { name = "waitlist_service", operations = ["read", "write"] } ]
