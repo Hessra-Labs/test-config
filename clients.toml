@@ -60,10 +60,19 @@ w+PhXA8=
 [[clients]]
 identifier = { type = "san_uri", value = "uri:urn:test:argo-cli0" }
 resources = [ { name = "resource1", operations = ["read", "write"] }, { name = "resource2", operations = ["read", "write"] }, { name = "resource4", operations = ["read", "write"] }, { name = "order_service", operations = ["read", "write"] }, { name = "update_telemetry", operations = ["update"] } ]
+identity_token_enabled = true
+identity_token_duration = 7200  # 2 hours
+
+[[clients]]
+identifier = { type = "san_uri", value = "uri:urn:test:argo-cli0:agent1" }
+resources = [ { name = "resource4", operations = ["read"] } ]
+identity_token_enabled = true
 
 [[clients]]
 identifier = { type = "san_uri", value = "uri:urn:test:argo-cli1" }
 resources = [ { name = "resource2", operations = ["read", "write"] }, { name = "resource3", operations = ["read", "write"] }, { name = "resource4", operations = ["read", "write"] }, { name = "order_service", operations = ["read", "write"] }, { name = "update_telemetry", operations = ["update"] } ]
+identity_token_enabled = true
+identity_token_duration = 3600  # 1 hour
 
 [[clients]]
 identifier = { type = "san_uri", value = "uri:urn:test:mage0" }
