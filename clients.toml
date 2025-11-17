@@ -56,24 +56,103 @@ w+PhXA8=
 # - Other SAN types
 # - Certificate serial number
 # - CA certificate mapping to client ID
+#
+# Identity Token Configuration Options:
+# - identity_token_enabled: Whether this client can request identity tokens (default: false)
+# - identity_token_duration: Duration in seconds for issued identity tokens (default: 3600)
+# - delegatable_identity_token: Whether identity tokens can be delegated to sub-identities (default: false)
+#   Example: urn:test:argo-cli0 can delegate to urn:test:argo-cli0:agent1
+# - can_mint_domain_restricted_identity_tokens: Whether this client can mint domain-restricted
+#   identity tokens for application-level identities (default: false)
+#   IMPORTANT: Minted tokens are ALWAYS restricted to the minting identity's domain.
+#   Example: If uri:urn:test:argo-cli1 mints a token for "uri:urn:test:argo-cli1:user1",
+#            the token will be restricted to domain "uri:urn:test:argo-cli1"
+# - minted_identity_token_duration: Duration in seconds for minted domain-restricted tokens (default: 3600)
 
+# Example: Realm identity with delegation capability
+# This client can delegate its identity to hierarchical sub-identities
 [[clients]]
 identifier = { type = "san_uri", value = "uri:urn:test:argo-cli0" }
 resources = [ { name = "resource1", operations = ["read", "write"] }, { name = "resource2", operations = ["read", "write"] }, { name = "resource4", operations = ["read", "write"] }, { name = "order_service", operations = ["read", "write"] }, { name = "update_telemetry", operations = ["update"] } ]
 identity_token_enabled = true
 identity_token_duration = 7200  # 2 hours
+delegatable_identity_token = true
 
+# Example: Delegated sub-identity
+# This is a sub-identity of argo-cli0 with restricted permissions
 [[clients]]
 identifier = { type = "san_uri", value = "uri:urn:test:argo-cli0:agent1" }
 resources = [ { name = "resource4", operations = ["read"] } ]
 identity_token_enabled = true
+identity_token_duration = 3600  # 1 hour
 
+# Example: Realm identity with domain-restricted identity minting capability
+# This client can mint domain-restricted identity tokens for application-level identities.
+# All minted tokens are automatically restricted to this identity's domain (uri:urn:test:argo-cli1).
+# For example, if this identity mints a token for "uri:urn:test:argo-cli1:user1", that token
+# will ONLY work within the "uri:urn:test:argo-cli1" domain and cannot be used system-wide.
+# This is enforced by the server - the client cannot specify a different domain.
 [[clients]]
 identifier = { type = "san_uri", value = "uri:urn:test:argo-cli1" }
 resources = [ { name = "resource2", operations = ["read", "write"] }, { name = "resource3", operations = ["read", "write"] }, { name = "resource4", operations = ["read", "write"] }, { name = "order_service", operations = ["read", "write"] }, { name = "update_telemetry", operations = ["update"] } ]
 identity_token_enabled = true
 identity_token_duration = 3600  # 1 hour
+can_mint_domain_restricted_identity_tokens = true
+minted_identity_token_duration = 3600  # 1 hour
 
 [[clients]]
 identifier = { type = "san_uri", value = "uri:urn:test:mage0" }
 resources = [ { name = "waitlist_service", operations = ["read", "write"] } ]
+
+# Domain Configuration
+# Domains enable role-based access control (RBAC) for dynamically-minted domain identities.
+# A "realm" identity (like uri:urn:test:argo-cli1) can mint domain-restricted identity tokens
+# for application-level users. These domain configurations define default permissions and roles
+# that can be assigned to domain identities.
+#
+# Domain Configuration Options:
+# - Key: The domain identifier (client identifier)
+# - roles: Named sets of resource+operation permissions that can be assigned
+# - defaults.role: The default role assigned to newly-minted domain identities
+#
+# Client Group Assignments:
+# - Clients can be assigned to domain roles via the "groups" field
+# - Groups override default role assignments
+# - Format: groups = [{ domain = "domain_identifier", roles = ["role1", "role2"] }]
+
+# Example: Domain configuration for argo-cli1 realm
+# This defines roles for dynamically-minted identities under the argo-cli1 domain
+[domains."uri:urn:test:argo-cli1"]
+
+# Admin role: Full access to resource4
+[domains."uri:urn:test:argo-cli1".roles.admin]
+resources = [
+    { name = "resource4", operations = ["read", "write"] },
+    { name = "resource2", operations = ["read", "write"] }
+]
+
+# Member role: Read-only access to resource3
+[domains."uri:urn:test:argo-cli1".roles.member]
+resources = [
+    { name = "resource3", operations = ["read"] }
+]
+
+# Default role for new domain identities
+[domains."uri:urn:test:argo-cli1".defaults]
+role = "member"
+
+# Example: Dynamically-minted domain identity with explicit role assignment
+# This client was minted by uri:urn:test:argo-cli1 and has been assigned the admin role.
+# The group assignment overrides the default "member" role.
+# Note: resources = [] because permissions come from domain roles, not direct assignment
+[[clients]]
+identifier = { type = "san_uri", value = "uri:urn:test:argo-cli1:admin-user" }
+resources = []
+groups = [{ domain = "uri:urn:test:argo-cli1", roles = ["admin"] }]
+identity_token_enabled = true
+identity_token_duration = 3600
+
+# Example: Dynamically-minted domain identity using default role
+# This represents a user identity minted by uri:urn:test:argo-cli1
+# When not present in the config, domain identities automatically get the default role (member)
+# To assign this identity to a role, add it to the config with group assignments as shown above
